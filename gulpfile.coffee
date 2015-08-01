@@ -3,6 +3,7 @@ gulp   =   require "gulp"
 env    =   require "gulp-env"
 coffee =   require "gulp-coffee"
 mocha  =   require "gulp-mocha"
+lint   =   require "gulp-coffeelint"
 
 coffeePaths = [
         "index.coffee",
@@ -31,7 +32,13 @@ gulp.task "watch", ->
         gulp.watch paths.test, ["test"]
 
 
-gulp.task "travis-ci", ["build", "test"]
+gulp.task "lint", ->
+        gulp.src paths.coffee.concat(paths.test)
+                .pipe lint()
+                .pipe lint.reporter()
+                .pipe lint.reporter("fail")
+
+gulp.task "travis-ci", ["build", "lint", "test"]
 
 gulp.task("default", ["build"])
 
